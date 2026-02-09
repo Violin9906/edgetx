@@ -1,0 +1,10 @@
+version: "1"
+rules:
+  - base: upstream
+    upstream: EdgeTX:main
+    mergeMethod: hardreset
+    mergeUnstable: true
+  - base: "2.11"
+    upstream: EdgeTX:2.11
+    mergeMethod: hardreset
+    mergeUnstable: true
