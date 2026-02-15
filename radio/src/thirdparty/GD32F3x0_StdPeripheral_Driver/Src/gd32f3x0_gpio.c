@@ -45,27 +45,27 @@ OF SUCH DAMAGE.
 void gpio_deinit(uint32_t gpio_periph)
 {
     switch(gpio_periph) {
-    case GPIOA:
+    case GPIOA_BASE:
         /* reset GPIOA */
         rcu_periph_reset_enable(RCU_GPIOARST);
         rcu_periph_reset_disable(RCU_GPIOARST);
         break;
-    case GPIOB:
+    case GPIOB_BASE:
         /* reset GPIOB */
         rcu_periph_reset_enable(RCU_GPIOBRST);
         rcu_periph_reset_disable(RCU_GPIOBRST);
         break;
-    case GPIOC:
+    case GPIOC_BASE:
         /* reset GPIOC */
         rcu_periph_reset_enable(RCU_GPIOCRST);
         rcu_periph_reset_disable(RCU_GPIOCRST);
         break;
-    case GPIOD:
+    case GPIOD_BASE:
         /* reset GPIOD */
         rcu_periph_reset_enable(RCU_GPIODRST);
         rcu_periph_reset_disable(RCU_GPIODRST);
         break;
-    case GPIOF:
+    case GPIOF_BASE:
         /* reset GPIOF */
         rcu_periph_reset_enable(RCU_GPIOFRST);
         rcu_periph_reset_disable(RCU_GPIOFRST);
