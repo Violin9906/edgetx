@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "EdgeTX-ARM",
+            "compilerPath": "/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc",
+            "intelliSenseMode": "linux-gcc-arm",
+            "compileCommands": [
+                "${workspaceFolder}/build/arm-none-eabi/compile_commands.json"
+            ],
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/gcc-arm-none-eabi/arm-none-eabi/include"
+            ]
+        }
+    ],
+    "version": 4
+}

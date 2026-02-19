@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "EdgeTX: Configure ARM Toolchain",
+            "type": "shell",
+            "command": "cmake --build build --target arm-none-eabi-configure",
+            "problemMatcher": [],
+            "detail": "configure arm toolchain"
+        },
+        {
+            "label": "EdgeTX: Configure Native Toolchain",
+            "type": "shell",
+            "command": "cmake --build build --target native-configure",
+            "problemMatcher": [],
+            "detail": "configure native toolchain"
+        },
+        {
+            "label": "EdgeTX: Build Firmware",
+            "type": "shell",
+            "command": "cmake --build build --target firmware -j${nproc}",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": "EdgeTX: Configure ARM Toolchain",
+            "problemMatcher": "$gcc",
+            "detail": "Build "
+        }
+    ]
+}
