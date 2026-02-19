@@ -3,7 +3,7 @@ set_property(CACHE LUA PROPERTY STRINGS YES NO NO_MODEL_SCRIPTS)
 set(LUA_SCRIPT_LOAD_MODE "" CACHE STRING "Script loading mode and compilation flags [btTxcd] (see loadScript() API docs). Blank for default ('bt' on radio, 'T' on SIMU/DEBUG builds)")
 option(LUA_COMPILER "Pre-compile and save Lua scripts" ON)
 option(LUA_ALLOCATOR_TRACER "Trace Lua memory (de)allocations to debug port (also needs DEBUG=YES NANO=NO)" OFF)
-
+option(USB "Enable USB" ON)
 option(USB_SERIAL "Enable USB serial (CDC)" OFF)
 
 set(ARCH ARM)
@@ -17,75 +17,77 @@ include_directories(${STM32_DRIVER_DIR})
 
 if(NOT NATIVE_BUILD)
   
-  # STM32 USB Device library
-  set(STM32USB_DIR ${THIRDPARTY_DIR}/STM32_USB_Device_Library)
+  if(USB)
+    # STM32 USB Device library
+    set(STM32USB_DIR ${THIRDPARTY_DIR}/STM32_USB_Device_Library)
 
-  add_library(stm32usb OBJECT EXCLUDE_FROM_ALL
-    ${STM32USB_DIR}/Core/Src/usbd_core.c
-    ${STM32USB_DIR}/Core/Src/usbd_ctlreq.c
-    ${STM32USB_DIR}/Core/Src/usbd_ioreq.c
-    ${STM32USB_DIR}/Class/CDC/Src/usbd_cdc.c
-    ${STM32USB_DIR}/Class/DFU/Src/usbd_dfu.c
-    ${STM32USB_DIR}/Class/MSC/Src/usbd_msc_data.c
-    ${STM32USB_DIR}/Class/MSC/Src/usbd_msc_scsi.c
-    ${STM32USB_DIR}/Class/MSC/Src/usbd_msc_bot.c
-    ${STM32USB_DIR}/Class/MSC/Src/usbd_msc.c
-  )
+    add_library(stm32usb OBJECT EXCLUDE_FROM_ALL
+      ${STM32USB_DIR}/Core/Src/usbd_core.c
+      ${STM32USB_DIR}/Core/Src/usbd_ctlreq.c
+      ${STM32USB_DIR}/Core/Src/usbd_ioreq.c
+      ${STM32USB_DIR}/Class/CDC/Src/usbd_cdc.c
+      ${STM32USB_DIR}/Class/DFU/Src/usbd_dfu.c
+      ${STM32USB_DIR}/Class/MSC/Src/usbd_msc_data.c
+      ${STM32USB_DIR}/Class/MSC/Src/usbd_msc_scsi.c
+      ${STM32USB_DIR}/Class/MSC/Src/usbd_msc_bot.c
+      ${STM32USB_DIR}/Class/MSC/Src/usbd_msc.c
+    )
 
-  target_include_directories(stm32usb PRIVATE
-    ${STM32USB_DIR}/Core/Inc
-    ${STM32USB_DIR}/Class/CDC/Inc
-    ${STM32USB_DIR}/Class/DFU/Inc
-    ${STM32USB_DIR}/Class/HID/Inc
-    ${STM32USB_DIR}/Class/MSC/Inc)
+    target_include_directories(stm32usb PRIVATE
+      ${STM32USB_DIR}/Core/Inc
+      ${STM32USB_DIR}/Class/CDC/Inc
+      ${STM32USB_DIR}/Class/DFU/Inc
+      ${STM32USB_DIR}/Class/HID/Inc
+      ${STM32USB_DIR}/Class/MSC/Inc)
 
-  target_include_directories(board_bl PRIVATE
-    ${STM32USB_DIR}/Core/Inc
-    ${STM32USB_DIR}/Class/DFU/Inc)
+    target_include_directories(board_bl PRIVATE
+      ${STM32USB_DIR}/Core/Inc
+      ${STM32USB_DIR}/Class/DFU/Inc)
 
-  set(FIRMWARE_SRC ${FIRMWARE_SRC} $<TARGET_OBJECTS:stm32usb>)
-  set(BOOTLOADER_SRC ${BOOTLOADER_SRC} $<TARGET_OBJECTS:stm32usb>)
+    set(FIRMWARE_SRC ${FIRMWARE_SRC} $<TARGET_OBJECTS:stm32usb>)
+    set(BOOTLOADER_SRC ${BOOTLOADER_SRC} $<TARGET_OBJECTS:stm32usb>)
 
-  # Bootloader USB devices
-  add_library(stm32usb_device_bl OBJECT EXCLUDE_FROM_ALL    
-    ${STM32_DRIVER_DIR}/usbd_conf.c
-    ${STM32_DRIVER_DIR}/usbd_desc.c
-    ${STM32_DRIVER_DIR}/usbd_storage_msd.cpp
-    ${STM32_DRIVER_DIR}/usb_driver.cpp
-  )
+    # Bootloader USB devices
+    add_library(stm32usb_device_bl OBJECT EXCLUDE_FROM_ALL    
+      ${STM32_DRIVER_DIR}/usbd_conf.c
+      ${STM32_DRIVER_DIR}/usbd_desc.c
+      ${STM32_DRIVER_DIR}/usbd_storage_msd.cpp
+      ${STM32_DRIVER_DIR}/usb_driver.cpp
+    )
 
-  target_compile_options(stm32usb_device_bl PRIVATE -DBOOT)
-  target_include_directories(stm32usb_device_bl PRIVATE
-    ${STM32USB_DIR}/Core/Inc
-    ${STM32USB_DIR}/Class/CDC/Inc
-    ${STM32USB_DIR}/Class/DFU/Inc
-    ${STM32USB_DIR}/Class/HID/Inc
-    ${STM32USB_DIR}/Class/MSC/Inc)
+    target_compile_options(stm32usb_device_bl PRIVATE -DBOOT)
+    target_include_directories(stm32usb_device_bl PRIVATE
+      ${STM32USB_DIR}/Core/Inc
+      ${STM32USB_DIR}/Class/CDC/Inc
+      ${STM32USB_DIR}/Class/DFU/Inc
+      ${STM32USB_DIR}/Class/HID/Inc
+      ${STM32USB_DIR}/Class/MSC/Inc)
 
-  set(BOOTLOADER_SRC ${BOOTLOADER_SRC} $<TARGET_OBJECTS:stm32usb_device_bl>)
+    set(BOOTLOADER_SRC ${BOOTLOADER_SRC} $<TARGET_OBJECTS:stm32usb_device_bl>)
 
-  # Firmware USB devices
-  add_library(stm32usb_device_fw OBJECT EXCLUDE_FROM_ALL
-    ${STM32_DRIVER_DIR}/usbd_conf.c
-    ${STM32_DRIVER_DIR}/usbd_desc.c
-    ${STM32_DRIVER_DIR}/usb_driver.cpp
-    ${STM32_DRIVER_DIR}/usbd_storage_msd.cpp
-    ${STM32_DRIVER_DIR}/usbd_cdc.cpp
-    ${STM32_DRIVER_DIR}/usbd_hid_joystick.c
-  )
+    # Firmware USB devices
+    add_library(stm32usb_device_fw OBJECT EXCLUDE_FROM_ALL
+      ${STM32_DRIVER_DIR}/usbd_conf.c
+      ${STM32_DRIVER_DIR}/usbd_desc.c
+      ${STM32_DRIVER_DIR}/usb_driver.cpp
+      ${STM32_DRIVER_DIR}/usbd_storage_msd.cpp
+      ${STM32_DRIVER_DIR}/usbd_cdc.cpp
+      ${STM32_DRIVER_DIR}/usbd_hid_joystick.c
+    )
 
-  if(DEBUG OR CLI OR USB_SERIAL)
-    target_compile_options(stm32usb_device_fw PRIVATE -DUSB_SERIAL)
+    if(DEBUG OR CLI OR USB_SERIAL)
+      target_compile_options(stm32usb_device_fw PRIVATE -DUSB_SERIAL)
+    endif()
+
+    target_include_directories(stm32usb_device_fw PRIVATE
+      ${STM32USB_DIR}/Core/Inc
+      ${STM32USB_DIR}/Class/CDC/Inc
+      ${STM32USB_DIR}/Class/DFU/Inc
+      ${STM32USB_DIR}/Class/HID/Inc
+      ${STM32USB_DIR}/Class/MSC/Inc)
+
+    set(FIRMWARE_SRC ${FIRMWARE_SRC} $<TARGET_OBJECTS:stm32usb_device_fw>)
   endif()
-
-  target_include_directories(stm32usb_device_fw PRIVATE
-    ${STM32USB_DIR}/Core/Inc
-    ${STM32USB_DIR}/Class/CDC/Inc
-    ${STM32USB_DIR}/Class/DFU/Inc
-    ${STM32USB_DIR}/Class/HID/Inc
-    ${STM32USB_DIR}/Class/MSC/Inc)
-
-  set(FIRMWARE_SRC ${FIRMWARE_SRC} $<TARGET_OBJECTS:stm32usb_device_fw>)
 
   # HAL/LL based driver library
   add_library(stm32_drivers OBJECT EXCLUDE_FROM_ALL

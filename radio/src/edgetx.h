@@ -34,7 +34,7 @@
 
 #include "board.h"
 
-#if !defined(SIMU)
+#if !defined(SIMU) && defined(USB)
 #include "usbd_msc_conf.h"
 #endif
 

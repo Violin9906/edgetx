@@ -36,6 +36,8 @@
 #ifndef GD32F3X0_H
 #define GD32F3X0_H
 
+#include "core_cm4.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -166,6 +168,168 @@ extern "C" {
 #endif /* GD32F350 GD32F355 GD32F370 */
     } IRQn_Type;
 
+    /* PATCH: type defines for peripheral registers */
+    // [ ] TODO: Only support F3x0 series and only necessary registers
+    typedef struct {
+        __IO uint32_t STAT          ;
+        __IO uint32_t CTL0          ;
+        __IO uint32_t CTL1          ;
+        __IO uint32_t SAMPT0        ;
+        __IO uint32_t SAMPT1        ;
+        __IO uint32_t IOFF0         ;
+        __IO uint32_t IOFF1         ;
+        __IO uint32_t IOFF2         ;
+        __IO uint32_t IOFF3         ;
+        __IO uint32_t WDHT          ;
+        __IO uint32_t WDLT          ;
+        __IO uint32_t RSQ0          ;
+        __IO uint32_t RSQ1          ;
+        __IO uint32_t RSQ2          ;
+        __IO uint32_t ISQ           ;
+        __IO uint32_t IDATA0        ;
+        __IO uint32_t IDATA1        ;
+        __IO uint32_t IDATA2        ;
+        __IO uint32_t IDATA3        ;
+        __IO uint32_t RDATA         ;
+        __IO uint32_t OVSAMPCTL     ;
+    } ADC_TypeDef;
+
+    typedef struct {
+        __IO uint32_t CTL           ;
+        __IO uint32_t OMODE         ;
+        __IO uint32_t OSPD0         ;
+        __IO uint32_t PUD           ;
+        __IO uint32_t ISTAT         ;
+        __IO uint32_t OCTL          ;
+        __IO uint32_t BOP           ;
+        __IO uint32_t LOCK          ;
+        __IO uint32_t AFSEL0        ;
+        __IO uint32_t AFSEL1        ;
+        __IO uint32_t BC            ;
+        __IO uint32_t TG            ;
+        uint8_t RESERVED1[12]       ;
+        __IO uint32_t OSPD1         ;
+    } GPIO_TypeDef;
+
+    typedef struct {
+        __IO uint32_t INTF          ;
+        __IO uint32_t INTC          ;
+    } DMA_TypeDef;
+
+    typedef struct {
+        __IO uint32_t CHxCTL        ;
+        __IO uint32_t CHxCNT        ;
+        __IO uint32_t CHxPADDR      ;
+        __IO uint32_t CHxMADDR      ;
+    } DMA_Channel_TypeDef;
+    
+    #define DMA_CHANNEL_BASE(dma, channel)  (dma + (uint32_t)0x00000008U + (uint32_t)0x0000014U * (uint32_t)(channel))
+
+    typedef struct {
+        __IO uint32_t INTEN         ;
+        __IO uint32_t EVEN          ;
+        __IO uint32_t RTEN          ;
+        __IO uint32_t FTEN          ;
+        __IO uint32_t SWIEV         ;
+        __IO uint32_t PD            ;
+    } EXTI_TypeDef;
+
+    typedef struct {
+        __IO uint32_t WS            ;
+        __IO uint32_t KEY           ;
+        __IO uint32_t OBKEY         ;
+        __IO uint32_t STAT          ;
+        __IO uint32_t CTL           ;
+        __IO uint32_t ADDR          ;
+        uint8_t RESERVED1[4]        ;
+        __IO uint32_t OBSTAT        ;
+        __IO uint32_t WP            ;
+        uint8_t RESERVED2[216]      ;
+        __IO uint32_t WSEN          ;
+        __IO uint32_t PID           ;
+    } FMC_TypeDef;
+
+    typedef struct {
+        __IO uint32_t CTL0          ;
+        __IO uint32_t CFG0          ;
+        __IO uint32_t INT           ;
+        __IO uint32_t APB2RST       ;
+        __IO uint32_t APB1RST       ;
+        __IO uint32_t AHBEN         ;
+        __IO uint32_t APB2EN        ;
+        __IO uint32_t APB1EN        ;
+        __IO uint32_t BDCTL         ;
+        __IO uint32_t RSTSCK        ;
+        __IO uint32_t AHBRST        ;
+        __IO uint32_t CFG1          ;
+        __IO uint32_t CFG2          ;
+        __IO uint32_t CTL1          ;
+        uint8_t RESERVED1[136]      ;
+        __IO uint32_t ADDCTL        ;
+        uint8_t RESERVED2[8]        ;
+        __IO uint32_t ADDINT        ;
+        uint8_t RESERVED3[40]       ;
+        __IO uint32_t ADDAPB1EN     ;
+        __IO uint32_t ADDAPB1RST    ;
+        __IO uint32_t VKEY          ;
+        uint8_t RESERVED4[48]       ;
+        __IO uint32_t DSV           ;
+    } RCU_TypeDef;
+
+    typedef struct {
+        __IO uint32_t CFG0          ;
+        uint8_t RESERVED1[4]        ;
+        __IO uint32_t EXTISS0       ;
+        __IO uint32_t EXTISS1       ;
+        __IO uint32_t EXTISS2       ;
+        __IO uint32_t EXTISS3       ;
+        __IO uint32_t CFG2          ;
+        uint8_t RESERVED2[4]        ;
+        __IO uint32_t CPSCTL        ;
+    } SYSCFG_TypeDef;
+
+    typedef struct {
+        __IO uint32_t CTL0          ;
+        __IO uint32_t CTL1          ;
+        __IO uint32_t CTL2          ;
+        __IO uint32_t BAUD          ;
+        __IO uint32_t GP            ;
+        __IO uint32_t RT            ;
+        __IO uint32_t CMD           ;
+        __IO uint32_t STAT          ;
+        __IO uint32_t INTC          ;
+        __IO uint32_t RDATA         ;
+        __IO uint32_t TDATA         ;
+        uint8_t RESERVED1[164]      ;
+        __IO uint32_t RFCS          ;
+    } USART_TypeDef;
+
+    typedef struct {
+        __IO uint32_t CTL0          ;
+        __IO uint32_t CTL1          ;
+        __IO uint32_t SMCFG         ;
+        __IO uint32_t DMAINTEN      ;
+        __IO uint32_t INTF          ;
+        __IO uint32_t SWEVG         ;
+        __IO uint32_t CHCTL0        ;
+        __IO uint32_t CHCTL1        ;
+        __IO uint32_t CHCTL2        ;
+        __IO uint32_t CNT           ;
+        __IO uint32_t PSC           ;
+        __IO uint32_t CAR           ;
+        __IO uint32_t CREP          ;
+        __IO uint32_t CH0CV         ;
+        __IO uint32_t CH1CV         ;
+        __IO uint32_t CH2CV         ;
+        __IO uint32_t CH3CV         ;
+        __IO uint32_t CCHP          ;
+        __IO uint32_t DMACFG        ;
+        __IO uint32_t DMATB         ;
+        __IO uint32_t IRMP          ;
+        uint8_t RESERVED1[168]      ;
+        __IO uint32_t CFG           ;
+    } TIMER_TypeDef;
+
     /* includes */
 #include "core_cm4.h"
 #include "system_gd32f3x0.h"
@@ -184,6 +348,15 @@ extern "C" {
 #define BIT(x)                       ((uint32_t)((uint32_t)0x01U<<(x)))
 #define BITS(start, end)             ((0xFFFFFFFFUL << (start)) & (0xFFFFFFFFUL >> (31U - (uint32_t)(end))))
 #define GET_BITS(regval, start, end) (((regval) & BITS((start),(end))) >> (start))
+
+#define SET_BIT(REG, BIT)     ((REG) |= (BIT))
+#define CLEAR_BIT(REG, BIT)   ((REG) &= ~(BIT))
+#define READ_BIT(REG, BIT)    ((REG) & (BIT))
+#define CLEAR_REG(REG)        ((REG) = (0x0))
+#define WRITE_REG(REG, VAL)   ((REG) = (VAL))
+#define READ_REG(REG)         ((REG))
+#define MODIFY_REG(REG, CLEARMASK, SETMASK)  WRITE_REG((REG), (((READ_REG(REG)) & (~(CLEARMASK))) | (SETMASK)))
+#define POSITION_VAL(VAL)     (__CLZ(__RBIT(VAL))) 
 
     /* main flash and SRAM memory map */
 #define FLASH_BASE            ((uint32_t)0x08000000U)       /*!< main FLASH base address          */
@@ -227,6 +400,9 @@ extern "C" {
 #define OB_BASE               ((uint32_t)0x1FFFF800U)       /*!< OB base address                  */
 #define DBG_BASE              ((uint32_t)0xE0042000U)       /*!< DBG base address                 */
 
+#define STORAGE_DENSITY_BASE  ((uint32_t)0x1FFFF7E0)        /*!< SRAM & FLASH DENSITY             */
+#define UNIQUE_ID_BASE        ((uint32_t)0x1FFFF7AC)        /*!< Chip Unique ID                   */
+
     /* define marco USE_STDPERIPH_DRIVER */
 #if !defined  USE_STDPERIPH_DRIVER
 #define USE_STDPERIPH_DRIVER
@@ -234,6 +410,26 @@ extern "C" {
 #ifdef USE_STDPERIPH_DRIVER
 #include "gd32f3x0_libopt.h"
 #endif /* USE_STDPERIPH_DRIVER */
+
+
+#define GPIOA                 ((GPIO_TypeDef *)GPIOA_BASE)
+#define GPIOB                 ((GPIO_TypeDef *)GPIOB_BASE)
+#define GPIOC                 ((GPIO_TypeDef *)GPIOC_BASE)
+#if defined(GPIOD_BASE)
+    #define GPIOD                 ((GPIO_TypeDef *)GPIOD_BASE)
+#endif
+#if defined(GPIOE_BASE)
+    #define GPIOE                 ((GPIO_TypeDef *)GPIOE_BASE)
+#endif
+#if defined(GPIOF_BASE)
+    #define GPIOF                 ((GPIO_TypeDef *)GPIOF_BASE)
+#endif
+#if defined(GPIOG_BASE)
+    #define GPIOG                 ((GPIO_TypeDef *)GPIOG_BASE)
+#endif
+#if defined(GPIOH_BASE)
+    #define GPIOH                 ((GPIO_TypeDef *)GPIOH_BASE)
+#endif
 
 #ifdef __cplusplus
 }

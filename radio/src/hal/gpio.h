@@ -27,13 +27,26 @@ typedef uint32_t gpio_t;
 
 typedef uint8_t  gpio_mode_t;
 typedef uint8_t  gpio_af_t;
-typedef uint8_t  gpio_speed_t;
 
+#if defined(GD32F3x0)
+typedef uint32_t  gpio_speed_t; // GD32F3x0 has OSPD0 & OSPD1
+#else
+typedef uint8_t  gpio_speed_t;
+#endif
+
+#if !defined(EXTI_TRIGGER_RISING)
 typedef enum {
-    GPIO_RISING = 1,
-    GPIO_FALLING = 2,
-    GPIO_BOTH = 3
+    GPIO_RISING = EXTI_TRIG_RISING,
+    GPIO_FALLING = EXTI_TRIG_FALLING,
+    GPIO_BOTH = EXTI_TRIG_BOTH
 } gpio_flank_t;
+#else
+typedef enum {
+    GPIO_RISING = EXTI_TRIGGER_RISING,
+    GPIO_FALLING = EXTI_TRIGGER_FALLING,
+    GPIO_BOTH = EXTI_TRIGGER_RISING_FALLING
+} gpio_flank_t;
+#endif
 
 typedef void (*gpio_cb_t)();
 
